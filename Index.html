@@ -1,0 +1,37 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sound Card</title>
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: black;
+  color: white;
+  font-size: 2em;
+  text-align: center;
+}
+</style>
+</head>
+
+<body onclick="playAudio()">
+
+<div>Tap anywhere 🔊</div>
+
+<audio id="sound">
+  <source src="sound.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+function playAudio() {
+  document.getElementById("sound").play();
+}
+</script>
+
+</body>
+</html>
