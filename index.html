@@ -3,6 +3,7 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sound Card</title>
+
 <style>
 body {
   margin: 0;
@@ -14,22 +15,77 @@ body {
   color: white;
   font-size: 2em;
   text-align: center;
+  overflow: hidden;
+}
+
+/* Flash overlay */
+#flash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
 }
 </style>
 </head>
 
-<body onclick="playAudio()">
+<body>
 
-<div>Tap anywhere 🔊</div>
+<div id="msg">Loading... 🔊</div>
+<div id="flash"></div>
 
-<audio id="sound">
+<audio id="sound" autoplay playsinline>
   <source src="sound.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-function playAudio() {
-  document.getElementById("sound").play();
+const audio = document.getElementById("sound");
+const msg = document.getElementById("msg");
+const flash = document.getElementById("flash");
+
+// FLASH EFFECT
+function triggerFlash() {
+  flash.style.opacity = "1";
+  setTimeout(() => {
+    flash.style.opacity = "0";
+  }, 100);
 }
+
+// VIBRATION
+function triggerVibrate() {
+  if (navigator.vibrate) {
+    navigator.vibrate([200, 100, 200]); // pattern
+  }
+}
+
+// MAIN TRIGGER
+function triggerAll() {
+  audio.play();
+  triggerFlash();
+  triggerVibrate();
+  msg.innerText = "🔊 Playing...";
+}
+
+// Try autoplay on load
+window.addEventListener("load", () => {
+  let playPromise = audio.play();
+
+  if (playPromise !== undefined) {
+    playPromise.then(() => {
+      triggerFlash();
+      triggerVibrate();
+      msg.innerText = "🔊 Playing...";
+    }).catch(() => {
+      msg.innerText = "⚠️ Tap anywhere ⚠️";
+    });
+  }
+});
+
+// Fallback: user tap
+document.body.addEventListener("click", triggerAll);
 </script>
 
 </body>
